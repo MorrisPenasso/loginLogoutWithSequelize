@@ -1,7 +1,7 @@
 # loginLogoutWithSequelize
 ### **Login and logout process with NodeJS and Sequelize**
 
-This is a project built with NodeJS, ExpressJS and Sequelize.
+This project is the continuation of "apiWithSequelize" project built with NodeJS, ExpressJS and Sequelize.
 
 I show how it work the login/logout process working with API and Sequelize.
 
