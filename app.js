@@ -151,4 +151,15 @@ app.post("/users/login", function (req, res) {
 
 });
 
+//for delete the last token stored into token table
+app.delete("users/login", function (req, res) {
+    
+    req.token.destroy().then(function () {
+
+        res.status(200).send();
+    }, function (e) {
+        res.status(404).send();
+    })
+})
+
 app.listen(8080);
