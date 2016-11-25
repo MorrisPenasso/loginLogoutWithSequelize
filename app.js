@@ -151,8 +151,8 @@ app.post("/users/login", function (req, res) {
 
 });
 
-//for delete the last token stored into token table
-app.delete("users/login", function (req, res) {
+//for delete form the token table, the token that user pass into header request
+app.delete("/users/login",middlewareAuth, function (req, res) {
     
     req.token.destroy().then(function () {
 

@@ -1,7 +1,7 @@
 {
-  "name": "sequelize-api-exercise",
+  "name": "login-logout-with-sequelize",
   "version": "1.0.0",
-  "description": "Exercise for create an a simple application with sequelize \u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C",
+  "description": "Login and logout process with NodeJS and Sequelize",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
