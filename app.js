@@ -127,16 +127,22 @@ app.post("/users", function (req, res) {
 app.post("/users/login", function (req, res) {
 
     var body = _.pick(req.body, "email", "password");   //filter body request for send into authenticate method only email and password
+    var userInstance;
 
     db.users.authenticate(body).then(function (user) {
-
+        userInstance = user;
         var token = user.generateToken("authentication");   // generate a token for use authorization from the user into other request
 
-        if (user) {
-            console.log("You are logged");
-            res.header("Auth", token).send(_.pick(user, "email"))
-            
-        }
+        return db.token.create({
+            tokenHash: token
+        });
+
+        
+    }).then(function(tokenInstance){
+
+        console.log("You are logged");
+        res.header("Auth", tokenInstance.get("tokenHash")).send(_.pick(userInstance, "email"))
+
     }, function (e) {
         res.status(401).send("Incorrect username or password. Please try again");
     })

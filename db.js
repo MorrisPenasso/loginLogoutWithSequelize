@@ -11,4 +11,5 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.model = sequelize.import("./models/model.js");
 db.users = sequelize.import("./models/users.js");
+db.token = sequelize.import("./models/token.js");
 module.exports = db;
