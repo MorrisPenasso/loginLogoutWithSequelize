@@ -4,15 +4,19 @@ module.exports = function (db) {
 
     return function (req, res, next) {
 
-        var token = req.get("Auth");
+        var token = req.get("Auth") || "";  // take tokenHash that will be inserted into header ( crypted + hashted )
 
         db.token.findOne({
             where: {
-                tokenHash: crypto.MD5(token).toString()
+                tokenHash: token
             }
         }).then(function (tokenMatched) {
-            req.token = tokenMatched;   //for access in this property from only api ( req.body / req.token ... )
-            next();
+            if (tokenMatched) {
+                req.token = tokenMatched;   //for access in this property from only api ( req.body / req.token ... )
+                next();
+            } else {
+                res.status(401).send();
+            }
         })
     }
 

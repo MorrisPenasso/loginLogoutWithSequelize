@@ -3,13 +3,13 @@ var app = new express();
 var bodyParser = require("body-parser");
 var _ = require("underscore");
 var db = require("./db.js");
-var middlewareToken = require("./middleware.js")(db);
+var middlewareAuth = require("./middleware.js")(db);
 
 app.use(bodyParser.json()); //body-parser extract the entire body portion and exposes it on req.body 
 
 
 //sync database with the model ( stored model into db )
-db.sequelize.sync().then(function () {
+db.sequelize.sync({force: true}).then(function () {
 
     console.log("Database started");
 })
@@ -23,7 +23,7 @@ app.get("/", function (req, res) {
 
 
 // search an existing person with id
-app.get("/findPerson/:id", function (req, res) {
+app.get("/findPerson/:id",middlewareAuth, function (req, res) {
 
     var id = parseInt(req.params.id, 10);
 
@@ -43,13 +43,13 @@ app.get("/findPerson/:id", function (req, res) {
 });
 
 // search an existing person with query into URL Request
-app.get("/findPerson", function (req, res) {
+app.get("/findPerson",middlewareAuth, function (req, res) {
 
     var query = req.query;
     var queryAttrs = {};
 
-    if (query.name) {
-        queryAttrs.name = query.name;
+    if (query.name) {   // if i insert "name" after ? character
+        queryAttrs.name = query.name;   // add property name into queryAttrs object and will be equals at query.name
     }
 
     if (query.description) {
@@ -76,7 +76,7 @@ app.get("/findPerson", function (req, res) {
 })
 
 // insert new person into sequelize database
-app.post("/insertPerson", function (req, res) {
+app.post("/insertPerson",middlewareAuth, function (req, res) {
 
     var data = req.body;
 
@@ -91,7 +91,7 @@ app.post("/insertPerson", function (req, res) {
 });
 
 // delete existing person into sequelize database
-app.delete("/deletePerson/:id", function (req, res) {
+app.delete("/deletePerson/:id",middlewareAuth, function (req, res) {
 
     var id = parseInt(req.params.id, 10);
 
@@ -134,7 +134,7 @@ app.post("/users/login", function (req, res) {
         userInstance = user;
         var token = user.generateToken("authentication");   // generate a token for use authorization from the user into other request
 
-        return db.token.create({
+        return db.token.create({    //insert the token hashed into table ( column tokenHash )
             tokenHash: token
         });
 
@@ -142,6 +142,7 @@ app.post("/users/login", function (req, res) {
     }).then(function(tokenInstance){
 
         console.log("You are logged");
+        //built a response inserting tokenHash from the table into header responde and send the user record
         res.header("Auth", tokenInstance.get("tokenHash")).send(_.pick(userInstance, "email"))
 
     }, function (e) {
