@@ -1,4 +1,6 @@
 var bcrypt = require("bcryptjs");
+var crypto = require("crypto-js");
+var jwt = require("jsonwebtoken");
 
 module.exports = function (sequelize, DataTypes) {
 
@@ -54,6 +56,24 @@ module.exports = function (sequelize, DataTypes) {
                     }
                         
                 })
+            }
+        },
+        instanceMethods:{
+            generateToken: function(typeToken){
+                if(!typeToken){
+                    return undefined;
+                } else {
+                    //create an object with the id of user that has been finded on login and the type string
+                    var objectToken = JSON.stringify({ id: this.get("id"), type: typeToken });
+                    //crypt the object and convert into string
+                    var objectCripted = crypto.AES.encrypt(objectToken, "criptToken123").toString();
+                    var tokenJWT = jwt.sign({
+                        token: objectCripted
+                    }, "crypt123");
+
+                    return tokenJWT;
+
+                }
             }
         }
     })

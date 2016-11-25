@@ -130,9 +130,12 @@ app.post("/users/login", function (req, res) {
 
     db.users.authenticate(body).then(function (user) {
 
+        var token = user.generateToken("authentication");   // generate a token for use authorization from the user into other request
+
         if (user) {
             console.log("You are logged");
-            res.status(200).send(_.pick(user, "email"));
+            res.header("Auth", token).send(_.pick(user, "email"))
+            
         }
     }, function (e) {
         res.status(401).send("Incorrect username or password. Please try again");
