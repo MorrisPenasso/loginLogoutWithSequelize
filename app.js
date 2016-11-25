@@ -105,7 +105,6 @@ app.delete("/deletePerson/:id", function (req, res) {
 });
 
 //insert a new account into database
-
 app.post("/users", function (req, res) {
 
     var body = _.pick(req.body, "email" , "password");
@@ -120,6 +119,23 @@ app.post("/users", function (req, res) {
         }
     }, function (e) {
         res.send(e);
+    })
+
+});
+
+// API for login with an existing account
+app.post("/users/login", function (req, res) {
+
+    var body = _.pick(req.body, "email", "password");   //filter body request for send into authenticate method only email and password
+
+    db.users.authenticate(body).then(function (user) {
+
+        if (user) {
+            console.log("You are logged");
+            res.status(200).send(_.pick(user, "email"));
+        }
+    }, function (e) {
+        res.status(401).send("Incorrect username or password. Please try again");
     })
 
 });
