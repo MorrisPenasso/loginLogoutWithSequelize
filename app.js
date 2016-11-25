@@ -156,7 +156,7 @@ app.delete("/users/login",middlewareAuth, function (req, res) {
     
     req.token.destroy().then(function () {
 
-        res.status(200).send();
+        res.status(200).send("You've signed out! See you again soon!");
     }, function (e) {
         res.status(404).send();
     })
