@@ -3,6 +3,7 @@ var app = new express();
 var bodyParser = require("body-parser");
 var _ = require("underscore");
 var db = require("./db.js");
+var middlewareToken = require("./middleware.js")(db);
 
 app.use(bodyParser.json()); //body-parser extract the entire body portion and exposes it on req.body 
 
